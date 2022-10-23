@@ -1,0 +1,16 @@
+{
+  "deno.enable": true,
+  "deno.lint": true,
+  "deno.unstable": false,
+  "[javascript]": {
+      "editor.formatOnPaste": true,
+      "editor.formatOnSave": false,
+      "editor.formatOnType": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSaveMode": "modifications",
+  },
+  "prettier.tabWidth": 2,
+  "prettier.singleQuote": true,
+  "prettier.semi": false,
+  "prettier.trailingComma": "none",
+}
