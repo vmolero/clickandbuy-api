@@ -4,7 +4,7 @@ import {
   AssumeRoleCommandOutput
 } from '../../../deps.ts'
 import config from '../../util/config.ts'
-import CryptoService from '../CrypoService.ts'
+import CryptoService from '../CryptoService.ts'
 import KeyValueStorable from '../storage/KeyValueStorable.ts'
 import RedisKeyValueService from '../storage/RedisKeyValueService.ts'
 import log from './../LoggerService.ts'
