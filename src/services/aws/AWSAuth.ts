@@ -4,13 +4,19 @@ import {
   AssumeRoleCommandOutput
 } from '../../../deps.ts'
 import config from '../../util/config.ts'
+import CryptoService from '../CrypoService.ts'
+import KeyValueStorable from '../storage/KeyValueStorable.ts'
+import RedisKeyValueService from '../storage/RedisKeyValueService.ts'
 import log from './../LoggerService.ts'
 
-type TmpTokenType = {
-  accessKeyId: string | null | undefined
-  secretAccessKey: string | null | undefined
-  sessionToken: string | null | undefined
-  expiration: Date | null
+let keyValueService: KeyValueStorable | null = null
+const cryptoService = CryptoService.createCryptoService()
+
+function calculateExpiresInMilliseconds(expiryDate: Date): number {
+  const nowInMilliseconds = Date.now()
+  const expiresInMilliseconds = expiryDate.getTime()
+
+  return (expiresInMilliseconds - nowInMilliseconds)
 }
 
 type TokenType = {
@@ -18,20 +24,6 @@ type TokenType = {
   refreshToken: string | null | undefined
   tokenType: string | null | undefined
   expiresIn: number | null
-}
-
-let tmpToken: TmpTokenType = {
-  accessKeyId: null,
-  secretAccessKey: null,
-  sessionToken: null,
-  expiration: null
-}
-
-let token: TokenType = {
-  accessToken: null,
-  refreshToken: null,
-  tokenType: null,
-  expiresIn: null
 }
 
 async function stsAssumeRole() {
@@ -109,32 +101,58 @@ async function authO2Token(): Promise<TokenType> {
 }
 
 async function getTemporaryAccessCredentials() {
-  if (!tmpToken.expiration || tmpToken.expiration < new Date()) {
-    tmpToken = await stsAssumeRole()
+  if (!keyValueService) {
+    keyValueService = await RedisKeyValueService.createKeyValueService()
   }
+  const hasToken = await keyValueService.has('awsTmpAccessToken')
+  if (hasToken) {
+    const encryptedToken = await keyValueService.get('awsTmpAccessToken')
+    const tmpAccessToken = await cryptoService.decrypt(encryptedToken)
+    return JSON.parse(tmpAccessToken)
+  }
+  const tmpAccessToken = await stsAssumeRole()
+  const ttl = tmpAccessToken.expiration
+    ? calculateExpiresInMilliseconds(tmpAccessToken.expiration)
+    : undefined
+  const encryptedToken = await cryptoService.encrypt(
+    JSON.stringify(tmpAccessToken)
+  )
+  await keyValueService.put('awsTmpAccessToken', encryptedToken, ttl)
 
-  return tmpToken
+  return tmpAccessToken
 }
 
 async function getAccessToken() {
-  if (!token.accessToken) {
-    token = await authO2Token()
-    setTimeout(() => {
-      token.accessToken = null
-    }, Number(token.expiresIn) * 1000 - 10000)
+  if (!keyValueService) {
+    keyValueService = await RedisKeyValueService.createKeyValueService()
   }
+  const hasToken = await keyValueService.has('awsAccessToken')
+  if (hasToken) {
+    const encryptedToken = await keyValueService.get('awsAccessToken')
+    const accessToken = await cryptoService.decrypt(encryptedToken)
+    return JSON.parse(accessToken)
+  }
+  const oAuthToken = await authO2Token()
+  const ttl = oAuthToken.expiresIn
+    ? (Number(oAuthToken.expiresIn) - 10) * 1000
+    : undefined
+  const encryptedToken = await cryptoService.encrypt(JSON.stringify(oAuthToken))
+  await keyValueService.put('awsAccessToken', encryptedToken, ttl)
 
-  return token
+  return oAuthToken
 }
 
 async function getAuthTokens() {
-  const [tmpToken, token] = await Promise.all([
+  if (!keyValueService) {
+    keyValueService = await RedisKeyValueService.createKeyValueService()
+  }
+  const [aTmpToken, oAuthToken] = await Promise.all([
     getTemporaryAccessCredentials(),
     getAccessToken()
   ])
   return {
-    tmpToken,
-    token
+    tmpToken: aTmpToken,
+    token: oAuthToken
   }
 }
 
