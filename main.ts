@@ -1,6 +1,6 @@
 import log from './src/services/LoggerService.js'
 import config from './src/util/config.js'
-import api from './src/api.js'
+import api from './src/api.ts'
 
 const port = config.app.port
 

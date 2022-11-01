@@ -1,1 +1,1 @@
-deno run --allow-read --allow-net --allow-env index.js
+deno run --allow-all --unstable --watch main.ts

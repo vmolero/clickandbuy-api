@@ -1,4 +1,4 @@
-import * as log from 'https://deno.land/std@0.160.0/log/mod.ts'
+import { log } from '../../deps.ts'
 
 await log.setup({
   //define handlers
