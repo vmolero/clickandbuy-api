@@ -1,4 +1,3 @@
-import { DotenvConfig } from 'https://deno.land/std@0.160.0/dotenv/mod.ts'
 import { config } from '../../deps.ts'
 
 const envConfig = await config()
@@ -6,6 +5,13 @@ const defaultPort = 3000
 
 class Config {
   public app: { port: number }
+  public keyValueService: { defaultTtl: number }
+  public redis: {
+    host: string
+    username: string
+    password: string
+    port: number
+  }
   public aws: {
     spApi: {
       appClientId: string
@@ -21,6 +27,11 @@ class Config {
     region: string
     endpoint: string
     oAuthEndpoint: string
+  }
+  public cryptoService: {
+    key: string
+    iv: string
+    mode: string
   }
 
   static createConfig() {
@@ -46,6 +57,21 @@ class Config {
       region: envConfig.AWS_REGION,
       endpoint: envConfig.AWS_ENDPOINT,
       oAuthEndpoint: envConfig.AWS_OAUTH_ENDPOINT
+    }
+    this.redis = {
+      host: envConfig.REDIS_HOST,
+      username: envConfig.REDIS_USERNAME,
+      password: envConfig.REDIS_PASSWORD,
+      port: Number(envConfig.REDIS_PORT)
+    }
+    this.keyValueService = {
+      // In milliseconds
+      defaultTtl: (Number(envConfig.KEY_VALUE_DEFAULT_TTL) || 600) * 1000
+    }
+    this.cryptoService = {
+      key: envConfig.CRYPTO_SERVICE_KEY,
+      iv: envConfig.CRYPTO_SERVICE_IV,
+      mode: envConfig.CRYPTO_SERVICE_MODE
     }
   }
 }
