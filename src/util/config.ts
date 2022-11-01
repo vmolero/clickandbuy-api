@@ -1,4 +1,4 @@
-import { config } from '../../deps.ts'
+import { config, DotenvConfig } from '../../deps.ts'
 
 const envConfig = await config()
 const defaultPort = 3000
