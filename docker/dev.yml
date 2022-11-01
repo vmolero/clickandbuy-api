@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:
+    postgres:
+        container_name: postgres
+        hostname: postgres
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: root
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 1s
+            timeout: 5s
+            retries: 10
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        networks:
+            - clickandbuy_network
+
+    redis:
+        container_name: redis
+        image: redis:latest
+        restart: always
+        entrypoint: redis-server --appendonly yes --requirepass root --maxmemory 512mb --maxmemory-policy allkeys-lru
+        networks:
+            - clickandbuy_network
+        ports:
+            - 6379:6379
+        volumes:
+            - redis-data:/var/lib/redis
+
+    adminer:
+        image: adminer
+        container_name: adminer
+        restart: always
+        ports:
+            - 8088:8080
+        networks:
+            - clickandbuy_network
+
+# depends_on:
+#       db:
+#         condition: service_healthy
+
+volumes:
+    pgdata:
+    redis-data:
+
+networks:
+    clickandbuy_network:
