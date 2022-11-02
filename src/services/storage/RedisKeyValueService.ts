@@ -68,12 +68,12 @@ class RedisKeyValueService implements KeyValueStorable {
    * @returns {Promise<void>}
    */
   async put(key: string, value: string, ttl?: number) {
-    const timeToLive = ttl
-      ? Math.floor(ttl / 1000)
+    const timeToLiveInMilliseconds = ttl
+      ? ttl
       : config.keyValueService.defaultTtl
-
+    const timeToLiveInSeconds = Math.floor(timeToLiveInMilliseconds / 1000)
     try {
-      await this.redis.set(key, value, { ex: timeToLive })
+      await this.redis.set(key, value, { ex: timeToLiveInSeconds })
     } catch (err) {
       log.error(
         `Failed to put redis key value [key=${key}, value=${value}]: ${err.message}`
