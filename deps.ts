@@ -27,5 +27,5 @@ export type {
 } from 'https://deno.land/x/opine@2.3.3/mod.ts'
 
 // Redis client
-export { connect } from 'https://deno.land/x/redis/mod.ts'
+export { connect as redisConnect } from 'https://deno.land/x/redis/mod.ts'
 export type { Redis } from 'https://deno.land/x/redis/mod.ts'

@@ -1,7 +1,16 @@
-import { connect, Redis } from '../../../deps.ts'
+import { redisConnect } from '../../../deps.ts'
 import config from '../../util/config.ts'
 import log from '../LoggerService.ts'
 import KeyValueStorable from './KeyValueStorable.ts'
+
+export interface MinimumRedisProps {
+  get(key: string): Promise<string>
+  set(key: string, value: string, opts?: { ex: number }): Promise<string>
+  exists(...keys: string[]): Promise<number>
+  flushall(async?: boolean): Promise<string>
+  del(...keys: string[]): Promise<number>
+  close: () => Promise<void>
+}
 
 class RedisKeyValueService implements KeyValueStorable {
   static async createKeyValueService(): Promise<KeyValueStorable> {
@@ -13,7 +22,7 @@ class RedisKeyValueService implements KeyValueStorable {
           '*****'
         )}]`
       )
-      const redisClient = await connect({
+      const redisClient = await redisConnect({
         hostname: config.redis.host,
         port: config.redis.port,
         password: config.redis.password,
@@ -22,7 +31,7 @@ class RedisKeyValueService implements KeyValueStorable {
       })
 
       return new RedisKeyValueService({
-        redis: redisClient
+        redis: redisClient as unknown as MinimumRedisProps
       }) as KeyValueStorable
     } catch (err) {
       throw new Error(
@@ -34,9 +43,9 @@ class RedisKeyValueService implements KeyValueStorable {
     }
   }
 
-  private redis: Redis
+  private redis: MinimumRedisProps
 
-  constructor(source: { redis: Redis }) {
+  constructor(source: { redis: MinimumRedisProps }) {
     this.redis = source.redis
   }
   async has(key: string) {
@@ -58,7 +67,7 @@ class RedisKeyValueService implements KeyValueStorable {
    * @param {number|undefined} ttl in milliseconds, time to live, if not set, falls back to default 10 min
    * @returns {Promise<void>}
    */
-  async put(key: string, value: string, ttl?: number | undefined) {
+  async put(key: string, value: string, ttl?: number) {
     const timeToLive = ttl
       ? Math.floor(ttl / 1000)
       : config.keyValueService.defaultTtl
