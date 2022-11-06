@@ -39,6 +39,14 @@ services:
         networks:
             - clickandbuy_network
 
+    web:
+        image: nginx
+        ports:
+            - "80:80"
+        volumes:
+            - ../public:/usr/share/nginx/html
+            - ./nginx:/etc/nginx/conf.d
+
 # depends_on:
 #       db:
 #         condition: service_healthy

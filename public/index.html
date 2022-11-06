@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>DenoWebsocketServer</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+  <h1>socket.io example</h1>
+  <p>
+    From node-websocket-vs-socket.io by Rafał Pocztarski
+    <br><a
+      href="https://github.com/rsp/node-websocket-vs-socket.io">https://github.com/rsp/node-websocket-vs-socket.io</a>
+    <br>Comparing WebSocket vs. Socket.IO on Node.js with Express.js
+  </p>
+  <p>
+    Open developer tools with Shift+Ctrl+I,
+    select Network and reload the page.
+    <br>This is the socket.io example.
+    See also the <a href="http://localhost:3001/">websocket example</a>.
+  </p>
+  <ol id="l"></ol>
+  <script type="module">
+    import { io } from "https://cdn.socket.io/4.5.3/socket.io.esm.min.js";
+
+    const socket = io("http://localhost:8886", { transports: ["websocket"] });
+
+    const l = document.getElementById('l');
+    const log = function (m) {
+      const i = document.createElement('li');
+      i.innerText = new Date().toISOString() + ' ' + m;
+      l.appendChild(i);
+    }
+    log('opening socket.io connection');
+    socket.on('connect_error', function (m) { log("error"); });
+    socket.on('connect', function (m) { log("socket.io connection open"); });
+    socket.on('message', function (m) { log(m.hi) });
+
+  </script>
+</body>
+
+</html>

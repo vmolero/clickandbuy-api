@@ -1,9 +1,12 @@
-import { opine, OpineRequest, OpineResponse } from '../deps.ts'
+import { opine, OpineRequest, OpineResponse, cors } from '../deps.ts'
 import log from './services/LoggerService.ts'
 import spApi from './services/SellerPartnerAPIService.ts'
 
 const api = opine()
-
+api.use(cors())
+api.get('/', (_req: OpineRequest, res: OpineResponse) => {
+  res.send("OK")
+})
 api.get(
   '/markets/:countryCode/asin/:asin',
   async function (req: OpineRequest, res: OpineResponse) {
