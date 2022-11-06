@@ -44,19 +44,19 @@ class Config {
     }
     this.aws = {
       spApi: {
-        appClientId: envConfig.AWS_SPAPI_APP_CLIENT_ID,
-        appClientSecret: envConfig.AWS_SPAPI_APP_CLIENT_SECRET,
-        appLwaRefreshToken: envConfig.AWS_SPAPI_APP_LWA_REFRESH_TOKEN
+        appClientId: envConfig.AVVS_SPAPI_APP_CLIENT_ID,
+        appClientSecret: envConfig.AVVS_SPAPI_APP_CLIENT_SECRET,
+        appLwaRefreshToken: envConfig.AVVS_SPAPI_APP_LWA_REFRESH_TOKEN
       },
       iam: {
-        accessKeyId: envConfig.AWS_IAM_ACCESS_KEY_ID,
-        secretAccessKey: envConfig.AWS_IAM_SECRET_ACCESS_KEY,
-        roleArn: envConfig.AWS_IAM_ARN_ROLE,
-        roleSessionName: envConfig.AWS_IAM_ROLE_SESSION_NAME
+        accessKeyId: envConfig.AVVS_IAM_ACCESS_KEY_ID,
+        secretAccessKey: envConfig.AVVS_IAM_SECRET_ACCESS_KEY,
+        roleArn: envConfig.AVVS_IAM_ARN_ROLE,
+        roleSessionName: envConfig.AVVS_IAM_ROLE_SESSION_NAME
       },
-      region: envConfig.AWS_REGION,
-      endpoint: envConfig.AWS_ENDPOINT,
-      oAuthEndpoint: envConfig.AWS_OAUTH_ENDPOINT
+      region: envConfig.AVVS_REGION,
+      endpoint: envConfig.AVVS_ENDPOINT,
+      oAuthEndpoint: envConfig.AVVS_OAUTH_ENDPOINT
     }
     this.redis = {
       host: envConfig.REDIS_HOST,
