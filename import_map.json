@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "awsSdk/": "https://deno.land/x/aws_sdk@v3.32.0-1/",
+    "awsSignV4/": "https://deno.land/x/aws_sign_v4@1.0.2/",
+    "cors/": "https://deno.land/x/cors@v1.2.2/",
+    "opine/": "https://deno.land/x/opine@2.3.3/",
+    "redis/": "https://deno.land/x/redis/",
+    "socketIO/": "https://deno.land/x/socket_io@0.2.0/",
+    "std/": "https://deno.land/std@0.161.0/"
+  }
+}

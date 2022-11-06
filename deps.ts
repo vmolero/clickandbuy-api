@@ -1,31 +1,33 @@
 // Deno STD
-export * as log from 'https://deno.land/std@0.161.0/log/mod.ts'
-export { config } from 'https://deno.land/std@0.161.0/dotenv/mod.ts'
-export type { DotenvConfig } from 'https://deno.land/std@0.161.0/dotenv/mod.ts'
-export { crypto } from 'https://deno.land/std@0.161.0/crypto/mod.ts'
+export * as log from 'std/log/mod.ts'
+export { config } from 'std/dotenv/mod.ts'
+export type { DotenvConfig } from 'std/dotenv/mod.ts'
+export { crypto } from 'std/crypto/mod.ts'
 export {
   encode as base64encode,
   decode as base64decode
-} from 'https://deno.land/std@0.161.0/encoding/base64url.ts'
+} from 'std/encoding/base64url.ts'
+export { serve as serveHttp } from 'std/http/server.ts'
+export type { ServeInit as HttpServeInit } from 'std/http/server.ts'
 
 // AWS SIGN
-export { AWSSignerV4 } from 'https://deno.land/x/aws_sign_v4@1.0.2/mod.ts'
-export type { Credentials } from 'https://deno.land/x/aws_sign_v4@1.0.2/mod.ts'
+export { AWSSignerV4 } from 'awsSignV4/mod.ts'
+export type { Credentials } from 'awsSignV4/mod.ts'
 
 // AWS SDK
-export {
-  STSClient,
-  AssumeRoleCommand
-} from 'https://deno.land/x/aws_sdk@v3.32.0-1/client-sts/mod.ts'
-export type { AssumeRoleCommandOutput } from 'https://deno.land/x/aws_sdk@v3.32.0-1/client-sts/mod.ts'
+export { STSClient, AssumeRoleCommand } from 'awsSdk/client-sts/mod.ts'
+export type { AssumeRoleCommandOutput } from 'awsSdk/client-sts/mod.ts'
 
 // Opine framework
-export { opine } from 'https://deno.land/x/opine@2.3.3/mod.ts'
-export type {
-  OpineResponse,
-  OpineRequest
-} from 'https://deno.land/x/opine@2.3.3/mod.ts'
+export { opine } from 'opine/mod.ts'
+export type { OpineResponse, OpineRequest } from 'opine/mod.ts'
 
 // Redis client
-export { connect as redisConnect } from 'https://deno.land/x/redis/mod.ts'
-export type { Redis } from 'https://deno.land/x/redis/mod.ts'
+export { connect as redisConnect } from 'redis/mod.ts'
+export type { Redis } from 'redis/mod.ts'
+
+// Socket IO server
+export { Server as SocketIOServer } from 'socketIO/mod.ts'
+
+// Cors
+export { opineCors as cors } from 'cors/mod.ts'
